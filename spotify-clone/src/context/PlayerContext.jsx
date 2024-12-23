@@ -38,6 +38,22 @@ const PlayerContextProvider = (props) =>{
         setPlayStatus(true);
     }
 
+    const previous = async () => {
+            if (track.id > 0) {
+                await setTrack(songsData[track.id - 1]);
+                await audioRef.current.play();
+                setPlayStatus(true);
+            }
+    }
+
+    const next = async () => {
+            if (track.id < songsData.length) {
+                await setTrack(songsData[track.id + 1]);
+                await audioRef.current.play();
+                setPlayStatus(true);
+            }
+        }
+
     useEffect(() => {
         setTimeout(() => {
             seekBar.current.style.width = (Math.floor(audioRef.current.currentTime / audioRef.current.duration * 100)) + "%";
@@ -66,7 +82,8 @@ const PlayerContextProvider = (props) =>{
         playStatus, setPlayStatus,
         time, setTime,
         play, pause,
-        playWithId
+        playWithId,
+        previous, next
     }
 
     return (
