@@ -1,6 +1,5 @@
 import { createContext, useRef, useState, useEffect} from "react";
-import { songsData } from "../assets/assets";
-
+import axios from 'axios';
 export const PlayerContext = createContext();
 
 const PlayerContextProvider = (props) =>{
@@ -9,6 +8,10 @@ const PlayerContextProvider = (props) =>{
     const seekBg = useRef();
     const seekBar = useRef();
 
+    const url = 'http://localhost:4000';
+
+    const [songsData,setSongsData] = useState([]);
+    const [albumsData, setAlbumData] = useState([]);
     const [track, setTrack] = useState(songsData[0])
     const [playStatus, setPlayStatus] = useState(false)
     const [time, setTime] = useState({
@@ -58,6 +61,25 @@ const PlayerContextProvider = (props) =>{
         audioRef.current.currentTime = ((e.nativeEvent.offsetX / seekBg.current.offsetWidth) * audioRef.current.duration)
     } 
 
+    const getSongsData = async () => {
+        try{
+            const response = await axios.get(`${url}/api/song/list`);
+            setSongsData(response.data.songs);
+            setTrack(response.data.songs[0])
+        } catch (error) {
+
+        }    
+    }
+    
+    const getAlbumsData = async () => {
+        try{
+            const response = await axios.get(`${url}/api/album/list`);
+            setAlbumData(response.data.albums);
+        } catch (error) {
+
+        }   
+    }
+
     useEffect(() => {
         setTimeout(() => {
             seekBar.current.style.width = (Math.floor(audioRef.current.currentTime / audioRef.current.duration * 100)) + "%";
@@ -78,6 +100,13 @@ const PlayerContextProvider = (props) =>{
         }, 1000);
     }, [audioRef])
 
+    useEffect(() => { 
+    
+            getSongsData()
+            getAlbumsData()
+    
+         }, [])
+
     const contextValue = {
         audioRef,
         seekBar,
@@ -88,7 +117,8 @@ const PlayerContextProvider = (props) =>{
         play, pause,
         playWithId,
         previous, next,
-        seekSong
+        seekSong,
+        songsData, albumsData
     }
 
     return (

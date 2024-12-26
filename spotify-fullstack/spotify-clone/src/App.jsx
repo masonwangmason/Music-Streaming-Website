@@ -2,7 +2,8 @@ import React, { useContext } from 'react'
 import Sidebar from './components/Sidebar'
 import Player from './components/Player'
 import Display from './components/Display'
-import { PlayerContext } from './context/playerContext'
+import { PlayerContext } from './context/PlayerContext'
+import { songsData } from './assets/assets'
 
 const App = () => {
 
@@ -10,13 +11,20 @@ const App = () => {
 
   return (
     <div className='h-screen bg-black'>
-      <div className='h-[90%] flex'>
-        <Sidebar />
-        <Display />
-      </div>
+      {
+        songsData.length !== 0 
+        ? <>
+          <div className='h-[90%] flex'>
+            <Sidebar />
+            <Display />
+          </div>
+          <Player />
+        </>
+        : null
+      }
       
-      <Player />
-      <audio ref={audioRef} src={track.file} preload='auto'></audio>
+      
+      <audio ref={audioRef} src={track?track.file:""} preload='auto'></audio>
     </div>
   )
 }
