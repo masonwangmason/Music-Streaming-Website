@@ -2,9 +2,9 @@ import React from 'react'
 
 const addAlbum = () => {
   return (
-    <div>
+    <form>
 
-    </div>
+    </form>
   )
 }
 
